@@ -12,10 +12,19 @@
   "type": "commonjs",
   "dependencies": {
     "@acedatacloud/x402-client": "*",
+    "@langchain/community": "^0.3.59",
+    "@langchain/core": "^0.3.30",
+    "@langchain/openai": "^0.3.17",
     "@oobe-protocol-labs/synapse-client-sdk": "github:OOBE-PROTOCOL/synapse-client-sdk",
     "@oobe-protocol-labs/synapse-sap-sdk": "^0.19.8",
     "@solana/web3.js": "^1.98.4",
     "axios": "^1.16.1",
-    "dotenv": "^17.4.2"
+    "canvas": "^3.2.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "langchain": "^0.3.14",
+    "socket.io": "^4.8.3",
+    "tailwindcss": "^4.3.0",
+    "zod": "^3.25.76"
   }
 }
