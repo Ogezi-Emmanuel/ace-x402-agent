@@ -1,0 +1,21 @@
+{
+  "name": "ace-x402-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@acedatacloud/x402-client": "*",
+    "@oobe-protocol-labs/synapse-client-sdk": "github:OOBE-PROTOCOL/synapse-client-sdk",
+    "@oobe-protocol-labs/synapse-sap-sdk": "^0.19.8",
+    "@solana/web3.js": "^1.98.4",
+    "axios": "^1.16.1",
+    "dotenv": "^17.4.2"
+  }
+}
