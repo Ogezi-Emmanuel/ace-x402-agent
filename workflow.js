@@ -51,6 +51,14 @@ async function retryRequest(requestFn, label, retries = 3, delay = 500) {
     }
 }
 
+// --- STRICT RPC TIMEOUT CIRCUIT BREAKER ---
+function withTimeout(promise, ms) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("RPC Circuit Breaker Timeout")), ms))
+    ]);
+}
+
 async function ensureEscrowV2(sapClient) {
     auditLog("escrow", "Checking for active Escrow V2 account...");
     try {
@@ -187,15 +195,26 @@ async function runAutonomousLoop() {
                     await executeX402Payment(sapClient, `ace-text-${shortSig}`, 0.00005);
 
                     auditLog("api_2", `Requesting model instantiation for infographic...`);
-                    // We explicitly tell DALL-E NOT to generate any text
-                    // Locate this inside your workflow.js under the visualize_and_archive tool:
-const imageRes = await retryRequest(() => axios.post(`${DYNAMIC_API_BASE}/v1/images/generations`, {
-    model: "dall-e-3", 
-    prompt: `A clean, minimalist dark-mode system architecture diagram. Central nodes connected by glowing neon green and cyan data pipelines on a dark obsidian background. Futuristic cyber operations matrix aesthetic, highly technical blueprint structure with sharp geometric vector lines. ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, AND NO RUNES ANYWHERE IN THE IMAGE. Clean space left at the top for title placement.`, 
-    n: 1, 
-    size: "1024x1024"
-}, { headers: { 'Authorization': `Bearer ${process.env.ACE_DATA_API_KEY}`, 'Content-Type': 'application/json' } }), "Ace_Image_Gen");
+                    
+                    // --- NEW: DYNAMIC THEME GENERATOR ---
+                    const visualThemes = [
+                        "crimson red and deep shadow angular shards, representing a critical breach",
+                        "electric blue and silver fluid data streams, representing quantum memory",
+                        "neon green and cyan geometric intersecting nodes, representing network traffic",
+                        "amber orange and dark charcoal industrial circuits, representing hardware abstraction",
+                        "magenta and violet glowing sine waves, representing cryptographic curves"
+                    ];
+                    const selectedTheme = visualThemes[Math.floor(Math.random() * visualThemes.length)];
+                    // ------------------------------------
 
+                    const imageRes = await retryRequest(() => axios.post(`${DYNAMIC_API_BASE}/v1/images/generations`, {
+                        model: "dall-e-3", 
+                        // Inject the random theme AND the specific threat name into the prompt
+                        prompt: `Abstract dark-mode digital art. ${selectedTheme} on a pitch black background. Cyberpunk network aesthetic visually representing the concept of: ${args.threatName}. Purely visual abstract geometry. ABSOLUTELY NO TEXT, NO LETTERS, AND NO UI ELEMENTS. Context: ${visualScript}`, 
+                        n: 1, 
+                        size: "1024x1024"
+                    }, { headers: { 'Authorization': `Bearer ${process.env.ACE_DATA_API_KEY}`, 'Content-Type': 'application/json' } }), "Ace_Image_Gen");
+                    
                     const imageUrl = imageRes.data.data[0].url;
                     const folder = path.join(runFolder, args.threatName.replace(/[^a-zA-Z0-9]/g, '_'));
                     if (!fs.existsSync(folder)) fs.mkdirSync(folder);
