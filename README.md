@@ -46,7 +46,7 @@ The **Ace Data Cloud x402 Orchestrator** is a production-ready Web3 security nod
 
 1. **Clone & Enter**:
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/Ogezi-Emmanuel/ace-x402-agent>
 cd ace-x402-agent
 
 ```
